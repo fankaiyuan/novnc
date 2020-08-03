@@ -7,7 +7,7 @@ ENV SHELL=/bin/bash \
 
 RUN apk update && apk add --no-cache ca-certificates wget && \
     mkdir -p $NOVNC_HOME && \
-    wget -qO- https://github.com/novnc/noVNC/archive/v1.2.0.tar.gz | tar xz -C $NOVNC_HOME && \
+    wget -qO- https://github.com/novnc/noVNC/archive/v1.2.0.tar.gz | tar xz --strip 1 -C $NOVNC_HOME && \
     chmod +x -v $NOVNC_HOME/utils/*.sh && \
     apk del wget && \
     $NOVNC_HOME/utils/launch.sh --vnc localhost:5901
