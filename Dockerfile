@@ -1,12 +1,12 @@
 FROM treehouses/alpine:latest
 
-ENV HOME=/home/alpine \
-    SHELL=/bin/bash \
+ENV SHELL=/bin/bash \
     VNC_PORT=5091 \
     NOVNC_PORT=6080 \
-    NOVNC_HOME=/home/alpine/noVNC
+    NOVNC_HOME=/home/noVNC
 
 RUN apk update && apk add --no-cache ca-certificates wget && \
+    mkdir -p $NOVNC_HOME && \
     wget -qO- https://github.com/novnc/noVNC/archive/v1.2.0.tar.gz | tar xz -C $NOVNC_HOME && \
     chmod +x -v $NOVNC_HOME/utils/*.sh && \
     apk del wget && \
