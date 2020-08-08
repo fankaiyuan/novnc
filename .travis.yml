@@ -25,7 +25,7 @@ before_deploy:
   - docker manifest inspect kaiyfan/novnc:$tag_time
 deploy:
   - provider: script
-    script: docker manifest push kaiyfan/novnc:$tag_latest; docker manifest push kaiyfan/novnc:$tag_time
+    script: docker manifest push kaiyfan/novnc:$tag_latest; docker manifest push kaiyfan/novnc:$tag_time; docker manifest push kaiyfan/novnc-tags:$tag_time
     skip_cleanup: true
     on:
       all_branches: true
