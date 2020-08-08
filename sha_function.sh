@@ -55,8 +55,9 @@ create_manifest (){
     local tag_arm=$4        #treehouses/webssh-tags:arm
     local tag_arm64=$5
     local tag_x86=$6
-    docker manifest create   $repo:$tag_latest $tag_arm $tag_arm64 $tag_x86
-    docker manifest create   $repo:$tag_time   $tag_arm $tag_arm64 $tag_x86
+    local repo_tags=$7
+    docker manifest create   $repo:$tag_latest      $tag_arm $tag_arm64 $tag_x86
+    docker manifest create   $repo:$tag_time        $tag_arm $tag_arm64 $tag_x86
 
     docker manifest annotate $repo:$tag_latest $tag_arm   --arch arm
     docker manifest annotate $repo:$tag_time   $tag_arm   --arch arm
@@ -64,4 +65,9 @@ create_manifest (){
     docker manifest annotate $repo:$tag_time   $tag_arm64 --arch arm64
     docker manifest annotate $repo:$tag_latest $tag_x86   --arch amd64
     docker manifest annotate $repo:$tag_time   $tag_x86   --arch amd64
+
+    docker manifest create   $repo_tags:$tag_time   $tag_arm $tag_arm64 $tag_x86
+    docker manifest annotate $repo_tags:$tag_time   $tag_arm   --arch arm
+    docker manifest annotate $repo_tags:$tag_time   $tag_arm64 --arch arm64
+    docker manifest annotate $repo_tags:$tag_time   $tag_x86   --arch amd64
 }
