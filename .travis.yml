@@ -14,7 +14,7 @@ script:
   - echo $DOCKERAPIKEY | docker login -u "kaiyfan" --password-stdin
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - "./docker-build.sh treehouses/alpine:latest arm arm64 amd64"
-  - flag=$(compare "treehouses/alpine:latest" "kaiyfan/novnc:latest" "kaiyfan/novnc-tags:arm)
+  - flag=$(compare "treehouses/alpine:latest" "kaiyfan/novnc:latest")
   - echo $flag
 before_deploy:
   - tag_time=$(date +%Y%m%d%H%M)
