@@ -13,14 +13,14 @@ script:
   - echo $flag_alpine
   - echo $DOCKERAPIKEY | docker login -u "kaiyfan" --password-stdin
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-  - "./docker-build.sh treehouses/alpine:latest arm arm64"
+  - "./docker-build.sh treehouses/alpine:latest arm arm64 amd64"
   - flag=$(compare "treehouses/alpine:latest" "kaiyfan/novnc:latest")
   - echo $flag
 before_deploy:
   - tag_time=$(date +%Y%m%d%H%M)
   - echo $tag_time
   - tag_latest="latest"
-  - create_manifest kaiyfan/novnc $tag_latest $tag_time kaiyfan/novnc-tags:arm kaiyfan/novnc-tags:arm64
+  - create_manifest kaiyfan/novnc $tag_latest $tag_time kaiyfan/novnc-tags:arm kaiyfan/novnc-tags:arm64 kaiyfan/novnc-tags:amd64
   - docker manifest inspect kaiyfan/novnc:$tag_latest
   - docker manifest inspect kaiyfan/novnc:$tag_time
 deploy:
