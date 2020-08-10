@@ -43,6 +43,12 @@ do
             docker build -t $tag_arch_time -f Dockerfile.$arch .
             docker push $tag_arch_time
             docker tag $tag_arch_time $tag_arch
-            docker push $tag_arch
     fi
+done
+
+for i in ${@:2}
+do
+    arch=$i   # arm arm64 amd64
+    tag_arch=kaiyfan/novnc-tags:$arch
+    docker push $tag_arch
 done
