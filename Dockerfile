@@ -1,6 +1,6 @@
 FROM treehouses/alpine:latest
 
-ENV VNC_PORT=5901 \
+ENV VNC_PORT=5900 \
     NOVNC_PORT=6080 \
     NOVNC_HOME=/srv/novnc \
     GET_HOST="ip route | awk '/default/ { print \$3 }'"
@@ -12,4 +12,4 @@ RUN apk update && apk add --no-cache git python2 procps && \
 
 EXPOSE $NOVNC_PORT
 
-CMD HOST_IP=$(eval $GET_HOST);$NOVNC_HOME/utils/launch.sh --vnc $HOST_IP:5901
+CMD HOST_IP=$(eval $GET_HOST);$NOVNC_HOME/utils/launch.sh --vnc $HOST_IP:$VNC_PORT
