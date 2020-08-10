@@ -8,7 +8,7 @@ services:
   - docker
 script:
   - export DOCKER_CLI_EXPERIMENTAL=enabled
-  - source docker-build.sh
+  - source sha-function.sh
   - alpine_arm_sha=$(get_manifest_sha "treehouses/alpine:latest" "arm")
   - echo $alpine_arm_sha
   - alpine_amd64_sha=$(get_manifest_sha "treehouses/alpine:latest" "amd64")
@@ -21,7 +21,6 @@ script:
   - echo $novnc_amd64_sha
   - novnc_arm64_sha=$(get_manifest_sha "kaiyfan/novnc" "arm64")
   - echo $novnc_arm64_sha
-  - source sha-function.sh
   - flag_arm=$(is_base "treehouses/alpine@"$alpine_arm_sha "kaiyfan/novnc@"$novnc_arm_sha )
   - echo $flag_arm
   - flag_amd64=$(is_base "treehouses/alpine@"$alpine_amd64_sha "kaiyfan/novnc@"$novnc_amd64_sha )

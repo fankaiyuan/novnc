@@ -1,5 +1,23 @@
 #!/bin/bash
 
+get_manifest_sha (){
+    local repo=$1     # <source>/alpine:latest
+    local arch=$2     # arm
+    docker pull -q $repo &>/dev/null
+    docker manifest inspect $repo > "$arch".txt
+    sha=""
+    local i=0
+    while [ "$sha" == "" ] && read -r line
+    do
+        archecture=$(jq .manifests[$i].platform.architecture "$arch".txt |sed -e 's/^"//' -e 's/"$//')
+        if [ "$archecture" = "$arch" ];then
+            sha=$(jq .manifests[$i].digest "$arch".txt  |sed -e 's/^"//' -e 's/"$//')
+            echo ${sha}
+        fi
+        i=$i+1
+    done < "$arch".txt
+}
+
 get_sha(){
     docker pull $1 &>/dev/null
     sha=$(docker image inspect $1 | jq --raw-output '.[0].RootFS.Layers|.[]')   # [0] means first element of list,[]means all the elments of lists
