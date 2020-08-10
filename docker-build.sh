@@ -38,9 +38,10 @@ do
             tag_time=$(date +%Y%m%d%H%M)
             tag_arch_time=kaiyfan/novnc-tags:$arch-$tag_time
             echo $tag_arch                       #kaiyfan/novnc-tags:arm-<time>
+            echo $tag_arch_time
             sed "s|{{base_image}}|$base_image|g" Dockerfile.template > Dockerfile.$arch
             docker build -t $tag_arch_time -f Dockerfile.$arch .
-            docker push $tag_arch
+            docker push $tag_arch_time
             docker tag $tag_arch_time $tag_arch
             docker push $tag_arch
     fi

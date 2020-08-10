@@ -58,7 +58,7 @@ compare (){
     result_arm=$(is_base $1 $2)
     result_arm64=$(is_base $3 $4)
     result_amd64=$(is_base $5 $6)
-    if [ $result_arm == "true" ] || [ $result_amd64 == "true"] || [ $result_arm64 == "true" ];     #compare alpine
+    if [ $result_arm == "true" ] || [ $result_amd64 == "true" ] || [ $result_arm64 == "true" ];     #compare alpine
     then
         echo "true"
     else
