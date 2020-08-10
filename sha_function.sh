@@ -37,10 +37,10 @@ is_base (){
 #}
 
 compare (){
-    result=$(is_base $1 $2)
-    #version1=$(get_service_version $3)
-    #version2=$(get_service_version $4)
-    if [ $result == "true" ]; #|| [ "$version1" != "$version2" ];     #compare alpine
+    result_arm=$(is_base $1 $2)
+    result_arm64=$(is_base $3 $4)
+    result_amd64=$(is_base $5 $6)
+    if [ $result_arm == "true" ] || [ $result_amd64 == "true"] || [ $result_arm64 == "true" ];     #compare alpine
     then
         echo "true"
     else
@@ -55,7 +55,7 @@ create_manifest (){
     local tag_arm=$4        #treehouses/webssh-tags:arm
     local tag_arm64=$5
     local tag_x86=$6
-    local repo_tags=$7
+
     docker manifest create   $repo:$tag_latest      $tag_arm $tag_arm64 $tag_x86
     docker manifest create   $repo:$tag_time        $tag_arm $tag_arm64 $tag_x86
 
@@ -65,9 +65,4 @@ create_manifest (){
     docker manifest annotate $repo:$tag_time   $tag_arm64 --arch arm64
     docker manifest annotate $repo:$tag_latest $tag_x86   --arch amd64
     docker manifest annotate $repo:$tag_time   $tag_x86   --arch amd64
-
-    docker manifest create   $repo_tags:$tag_time   $tag_arm $tag_arm64 $tag_x86
-    docker manifest annotate $repo_tags:$tag_time   $tag_arm   --arch arm
-    docker manifest annotate $repo_tags:$tag_time   $tag_arm64 --arch arm64
-    docker manifest annotate $repo_tags:$tag_time   $tag_x86   --arch amd64
 }

@@ -8,24 +8,41 @@ services:
   - docker
 script:
   - export DOCKER_CLI_EXPERIMENTAL=enabled
-  - source sha_function.sh
-  - flag_alpine=$(is_base "treehouses/alpine:latest" "kaiyfan/novnc:latest")
-  - echo $flag_alpine
+  - source docker-build.sh
+  - alpine_arm_sha=$(get_manifest_sha "treehouses/alpine:latest" "arm")
+  - echo $alpine_arm_sha
+  - alpine_amd64_sha=$(get_manifest_sha "treehouses/alpine:latest" "amd64")
+  - echo $alpine_amd64_sha
+  - alpine_arm64_sha=$(get_manifest_sha "treehouses/alpine:latest" "arm64")
+  - echo $alpine_arm64_sha
+  - novnc_arm_sha=$(get_manifest_sha "kaiyfan/novnc:latest" "arm")
+  - echo $novnc_arm_sha
+  - novnc_amd64_sha=$(get_manifest_sha "kaiyfan/novnc" "amd64")
+  - echo $novnc_amd64_sha
+  - novnc_arm64_sha=$(get_manifest_sha "kaiyfan/novnc" "arm64")
+  - echo $novnc_arm64_sha
+  - source sha-function.sh
+  - flag_arm=$(is_base "treehouses/alpine@"$alpine_arm_sha "kaiyfan/novnc@"$novnc_arm_sha )
+  - echo $flag_arm
+  - flag_amd64=$(is_base "treehouses/alpine@"$alpine_amd64_sha "kaiyfan/novnc@"$novnc_amd64_sha )
+  - echo $flag_amd64
+  - flag_arm64=$(is_base "treehouses/alpine@"$alpine_arm64_sha "kaiyfan/novnc@"$novnc_arm64_sha )
+  - echo $flag_arm64
   - echo $DOCKERAPIKEY | docker login -u "kaiyfan" --password-stdin
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - "./docker-build.sh treehouses/alpine:latest arm arm64 amd64"
-  - flag=$(compare "treehouses/alpine:latest" "kaiyfan/novnc:latest")
+  - flag=$(compare "treehouses/alpine@"$alpine_arm_sha "kaiyfan/novnc@"$novnc_arm_sha "treehouses/alpine@"$alpine_amd64_sha "kaiyfan/novnc@"$novnc_amd64_sha  "treehouses/alpine@"$alpine_arm64_sha "kaiyfan/novnc@"$novnc_arm64_sha)
   - echo $flag
 before_deploy:
   - tag_time=$(date +%Y%m%d%H%M)
   - echo $tag_time
   - tag_latest="latest"
-  - create_manifest kaiyfan/novnc $tag_latest $tag_time kaiyfan/novnc-tags:arm kaiyfan/novnc-tags:arm64 kaiyfan/novnc-tags:amd64 kaiyfan/novnc-tags
+  - create_manifest kaiyfan/novnc $tag_latest $tag_time kaiyfan/novnc-tags:arm kaiyfan/novnc-tags:arm64 kaiyfan/novnc-tags:amd64
   - docker manifest inspect kaiyfan/novnc:$tag_latest
   - docker manifest inspect kaiyfan/novnc:$tag_time
 deploy:
   - provider: script
-    script: docker manifest push kaiyfan/novnc:$tag_latest; docker manifest push kaiyfan/novnc:$tag_time; docker manifest push kaiyfan/novnc-tags:$tag_time
+    script: docker manifest push kaiyfan/novnc:$tag_latest; docker manifest push kaiyfan/novnc:$tag_time
     skip_cleanup: true
     on:
       all_branches: true

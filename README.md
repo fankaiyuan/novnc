@@ -9,7 +9,7 @@ git clone https://github.com/ole-vi/novnc.git
 cd novnc
 docker build -t novnc .
 ````
-###Usage:
+### Usage:
 - After build the docker image run with
 ``docker run -p 6080:6080 -d novnc``
 - Open a browser and navigate to the ``serverip:6080``
